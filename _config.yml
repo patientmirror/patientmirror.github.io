@@ -1,0 +1,29 @@
+title: "Patient MIRROR"
+description: "Medical Instructional Resource Review Of Representation — a research study on demographic representation in clinical vignettes."
+url: "patientmirror.github.io"
+
+# Build settings
+theme: null          # No remote theme; using custom HTML/CSS
+plugins: []
+
+# Exclude files from Jekyll build
+exclude:
+  - README.md
+  - LICENSE
+
+# Markdown processor
+markdown: kramdown
+kramdown:
+  input: GFM
+
+# Collections (optional, for future expansion)
+# collections:
+#   posts:
+#     output: true
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: null

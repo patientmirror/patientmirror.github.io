@@ -19,9 +19,9 @@
   --ink-3: oklch(55% 0.01 270);
   --rule: oklch(20% 0.01 270 / 0.12);
   --rule-soft: oklch(20% 0.01 270 / 0.06);
-  --accent: oklch(28% 0.14 265);   /* emory blue */
+  --accent: oklch(28% 0.14 265);   /* blue */
   --accent-soft: oklch(28% 0.14 265 / 0.08);
-  --gold: oklch(60% 0.13 80);     /* emory gold */
+  --gold: oklch(60% 0.13 80);     /* gold */
 
   --serif: 'Fraunces', 'Source Serif 4', Georgia, serif;
   --sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -92,9 +92,100 @@ body {
 
 /* ─── Hero ─────────────────────────────────────────────── */
 .hero {
-  padding: 24px 0 48px;
+  padding: 24px 0 24px;
   border-bottom: 1px solid var(--rule);
-  margin-bottom: 48px;
+  margin-bottom: 0;
+}
+.hero-text { min-width: 0; }
+.hero-figure {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      var(--bg-soft) 0 14px,
+      var(--bg) 14px 28px
+    );
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-figure::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      var(--accent) 0%,
+      transparent 30%,
+      transparent 70%,
+      var(--gold) 100%
+    );
+  opacity: 0.04;
+  pointer-events: none;
+}
+.hero-figure-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+.hero-figure-content .glyph {
+  display: block;
+  margin: 0 auto 18px;
+  color: var(--accent);
+}
+.hero-figure-content .glyph-gold { color: var(--gold); }
+.hero-figure-content .ph-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.1em;
+}
+.hero-figure-content .ph-caption {
+  margin-top: 6px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-2);
+  letter-spacing: 0;
+  text-transform: none;
+  max-width: 24ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+}
+.hero-figure-corner {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero-figure-corner.tr { left: auto; right: 12px; text-align: right; }
+.hero-figure-corner.bl { top: auto; bottom: 12px; }
+.hero-figure-corner.br { top: auto; left: auto; bottom: 12px; right: 12px; text-align: right; }
+.hero-figure-corner b {
+  display: block;
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  margin-top: 1px;
 }
 .hero-eyebrow {
   font-size: 11px;
@@ -114,12 +205,12 @@ body {
 .hero h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(34px, 4.2vw, 56px);
-  line-height: 1.05;
+  font-size: clamp(28px, 3.4vw, 48px);
+  line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0 0 20px;
-  max-width: 18ch;
-  text-wrap: balance;
+  white-space: nowrap;
+  text-wrap: nowrap;
 }
 .hero h1 em {
   font-style: italic;
@@ -131,13 +222,12 @@ body {
   font-size: 18px;
   line-height: 1.45;
   color: var(--ink-2);
-  max-width: 620px;
   text-wrap: pretty;
 }
 
 /* ─── Section frame ────────────────────────────────────── */
 .section {
-  padding: 44px 0;
+  padding: 32px 0 44px;
   border-bottom: 1px solid var(--rule);
 }
 .section:last-of-type { border-bottom: 0; }
@@ -191,6 +281,29 @@ body {
   font-weight: 500;
 }
 .section-aside .row + .row { margin-top: 12px; }
+
+/* ─── About ────────────────────────────────────────────── */
+.about-prose {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 680px;
+}
+.about-prose p { margin: 0 0 0.9em; text-wrap: pretty; }
+.about-prose p:last-child { margin-bottom: 0; }
+.about-prose .pullquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--ink);
+  border-left: 2px solid var(--gold);
+  padding: 2px 0 2px 20px;
+  margin: 18px 0;
+  font-weight: 300;
+}
 
 /* ─── FAQ ──────────────────────────────────────────────── */
 .faq-list {
@@ -660,47 +773,6 @@ body {
 
 <script type="text/babel">
 
-// tweaks-panel.jsx
-// Reusable Tweaks shell + form-control helpers.
-//
-// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
-// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
-// individual prototypes don't re-roll it. Ships a consistent set of controls so you
-// don't hand-draw <input type="range">, segmented radios, steppers, etc.
-//
-// Usage (in an HTML file that loads React + Babel):
-//
-//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-//     "primaryColor": "#D97757",
-//     "fontSize": 16,
-//     "density": "regular",
-//     "dark": false
-//   }/*EDITMODE-END*/;
-//
-//   function App() {
-//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
-//     return (
-//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
-//         Hello
-//         <TweaksPanel>
-//           <TweakSection label="Typography" />
-//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
-//                        onChange={(v) => setTweak('fontSize', v)} />
-//           <TweakRadio  label="Density" value={t.density}
-//                        options={['compact', 'regular', 'comfy']}
-//                        onChange={(v) => setTweak('density', v)} />
-//           <TweakSection label="Theme" />
-//           <TweakColor  label="Primary" value={t.primaryColor}
-//                        onChange={(v) => setTweak('primaryColor', v)} />
-//           <TweakToggle label="Dark mode" value={t.dark}
-//                        onChange={(v) => setTweak('dark', v)} />
-//         </TweaksPanel>
-//       </div>
-//     );
-//   }
-//
-// ─────────────────────────────────────────────────────────────────────────────
-
 const __TWEAKS_STYLE = `
   .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
     max-height:calc(100vh - 32px);display:flex;flex-direction:column;
@@ -1092,15 +1164,15 @@ Object.assign(window, {
 const FAQS = [
   {
     q: 'What is the Patient MIRROR study?',
-    a: 'Patient MIRROR (Medical Instructional Resource Review Of Representation) is a research project that systematically examines the demographic characteristics of patients depicted in clinical vignettes used in medical education. The study aims to characterize patterns of representation across dimensions such as age, sex, race, and ethnicity.',
+    a: 'Patient MIRROR: Medical Instructional Resource Review Of Representation is a research project that systematically examines the demographic characteristics of patients depicted in clinical vignettes used in medical education. The study aims to characterize patterns of representation across dimensions such as age, sex, race, and ethnicity.',
   },
   {
     q: 'Who is conducting this research?',
-    a: 'The project is being led by Dr. Marta Rowh, Assistant Professor of Emergency Medicine, Emory University School of Medicine.',
+    a: 'The project is being led by Dr Marta Rowh, Assistant Professor of Emergency Medicine, Emory University School of Medicine.',
   },
   {
     q: 'What types of clinical vignettes are included in the analysis?',
-    a: 'USMLE-style questions, textbook cases, standardized patient scenarios, and other case-based teaching materials commonly used in undergraduate and graduate medical education.',
+    a: 'USMLE-style questions, textbook cases, clinical vignettes, and other case-based teaching materials commonly used in undergraduate and graduate medical education.',
   },
   {
     q: 'What demographic dimensions does the study examine?',
@@ -1115,8 +1187,8 @@ const FAQS = [
     a: 'The contributed curricular materials will only be used for research, after de-identification. Your curricular material will not be shared with non-project personnel.',
   },
   {
-    q: 'How do I contact the research team?',
-    a: 'You can reach out to our team at patientmirror (at) gmail (dot) com.',
+    q: 'How can I benefit from this study?',
+    a: 'If you choose to share your contact information with us and opt-in to receive an analysis, our team will email you a report outlining the demographic distribution of clinical vignettes in your course. Since courses are often taught by multiple faculty members, we aim to provide a centralized course-level analysis for demographic representation.',
   },
 ];
 
@@ -1172,7 +1244,8 @@ function DropboxUpload() {
       <div className="upload-meta">
         <div className="upload-eyebrow">Contribute materials</div>
         <p className="upload-copy">
-          Drop curricular material (slides, PDFs, etc) containing clinical vignettes, USMLE-style questions, or case studiesdirectly into our Dropbox file request. You may contribute anonymously. Files are
+          Drop USMLE-style questions, textbook cases, standardized-patient scripts, or other curricular
+          materials directly into our Dropbox file request. You may contribute anonymously. Files are
           de-identified and used only for the Patient MIRROR analysis.
         </p>
         <div className="upload-footnote-inline">
@@ -1217,9 +1290,11 @@ Object.assign(window, { DropboxUpload });
 // Shows: schools, files, cases, demographics, distribution chart with filters
 
 const SCHOOLS = [
-  { id: 'emory',     name: 'School A',                 files: 47, cases: 312 },
-  { id: 'jhu',       name: 'School B',                    files: 41, cases: 268 },
-  { id: 'ucsf',      name: 'School C',                             files: 38, cases: 241 },
+  { id: 'a', name: 'School A', files: 47, cases: 312 },
+  { id: 'b', name: 'School B', files: 41, cases: 268 },
+  { id: 'c', name: 'School C', files: 38, cases: 241 },
+  { id: 'd', name: 'School D', files: 34, cases: 219 },
+  { id: 'e', name: 'School E', files: 31, cases: 198 },
 ];
 
 const SPECIALTIES = [
@@ -1250,8 +1325,8 @@ const DEMOGRAPHICS = {
     { label: 'Not specified',                  pct: 12 },
   ],
   'Ethnicity': [
-    { label: 'Not Hispanic',  pct: 71 },
-    { label: 'Hispanic',      pct:  9 },
+    { label: 'Not Hispanic or Latino',  pct: 71 },
+    { label: 'Hispanic or Latino',      pct:  9 },
     { label: 'Not specified',           pct: 20 },
   ],
   'Socioeconomic status': [
@@ -1418,29 +1493,19 @@ Object.assign(window, { Dashboard });
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": "emory",
-  "typeface": "fraunces-inter",
+  "typeface": "source-serif",
   "dashboardLayout": "schools-first",
   "accentColor": "#012169",
   "showWordmarkAccent": true
 }/*EDITMODE-END*/;
 
-// Emory University brand: Emory Blue #012169 (primary) + Emory Gold #B58500 (secondary).
-// Approximated in oklch so chroma renders consistently with the rest of the system.
 const PALETTES = {
-  emory: { bg: 'oklch(98% 0.005 250)', bgSoft: 'oklch(96% 0.010 250)', accent: 'oklch(28% 0.14 265)', ink: 'oklch(18% 0.02 265)' }, // Emory Blue
-  'emory-gold': { bg: 'oklch(98% 0.006 90)', bgSoft: 'oklch(96% 0.014 85)', accent: 'oklch(58% 0.13 78)', ink: 'oklch(20% 0.02 265)' }, // Emory Gold accent over warm bone
-  oxblood: { bg: 'oklch(98% 0.005 90)', bgSoft: 'oklch(96% 0.008 80)', accent: 'oklch(42% 0.13 25)', ink: 'oklch(20% 0.01 270)' },
-  clinical: { bg: 'oklch(98% 0.006 230)', bgSoft: 'oklch(96% 0.012 230)', accent: 'oklch(45% 0.13 240)', ink: 'oklch(22% 0.02 240)' },
-  forest: { bg: 'oklch(98% 0.008 130)', bgSoft: 'oklch(96% 0.014 130)', accent: 'oklch(40% 0.10 150)', ink: 'oklch(20% 0.015 150)' },
-  graphite: { bg: 'oklch(98% 0.003 80)', bgSoft: 'oklch(95% 0.005 80)', accent: 'oklch(28% 0.02 270)', ink: 'oklch(18% 0.005 270)' },
+  emory: { bg: 'oklch(98% 0.005 250)', bgSoft: 'oklch(96% 0.010 250)', accent: 'oklch(28% 0.14 265)', ink: 'oklch(18% 0.02 265)' },
   custom: null
 };
 
 const TYPEFACES = {
-  'fraunces-inter': { serif: "'Fraunces', Georgia, serif", sans: "'Inter', system-ui, sans-serif", label: 'Fraunces × Inter' },
-  'newsreader-inter': { serif: "'Newsreader', Georgia, serif", sans: "'Inter', system-ui, sans-serif", label: 'Newsreader × Inter' },
   'source-serif': { serif: "'Source Serif 4', Georgia, serif", sans: "'Inter', system-ui, sans-serif", label: 'Source Serif × Inter' },
-  'all-serif': { serif: "'Fraunces', Georgia, serif", sans: "'Source Serif 4', Georgia, serif", label: 'All-serif (editorial)' }
 };
 
 function App() {
@@ -1448,7 +1513,7 @@ function App() {
 
   const palette = PALETTES[t.palette] || PALETTES.oxblood;
   const accent = t.palette === 'custom' ? t.accentColor : palette.accent;
-  const typeface = TYPEFACES[t.typeface] || TYPEFACES['fraunces-inter'];
+  const typeface = TYPEFACES[t.typeface] || TYPEFACES['source-serif'];
 
   const themeStyle = {
     '--bg': palette ? palette.bg : 'oklch(98% 0.005 90)',
@@ -1482,17 +1547,19 @@ function App() {
 
       {/* ─── Hero ──────────────────────────── */}
       <section className="hero" data-screen-label="Hero">
-        <div className="hero-eyebrow">
-          <span className="dot"></span>A research study · Emory University School of Medicine
+        <div className="hero-text">
+          <div className="hero-eyebrow">
+            <span className="dot"></span>Research study · Emory University School of Medicine
+          </div>
+          <h1>Who appears in the cases <em>future clinicians</em> learn from?</h1>
+          <p className="hero-lede">
+            Patient MIRROR systematically analyzes the demographic composition of clinical
+            vignettes used in medical education to identify patterns of representation —
+            and omission — across the populations they depict.
+          </p>
         </div>
-        <h1>Who appears in the cases <em>future clinicians</em> learn from?</h1>
-        <p className="hero-lede">
-          Patient MIRROR systematically analyzes the demographic composition of clinical
-          vignettes used in medical education to identify patterns of representation —
-          and omission — across the populations they depict.
-        </p>
       </section>
-      
+
       {/* ─── FAQ ───────────────────────────── */}
       <section className="section" id="faq" data-screen-label="FAQ">
         <div className="section-head">
@@ -1525,15 +1592,17 @@ function App() {
           <aside className="section-aside">
             <div className="row">
               <span className="label">Accepted formats</span>
-              PDF · PPTX · DOCX · TXT
+              PDF · DOCX · TXT<br />
+              Question-bank exports<br />
+              Annotated images
             </div>
             <div className="row">
               <span className="label">De-identification</span>
-              All materials are processed and de-identified before annotation. Source attribution is optional.
+              All materials are processed and de-identified before annotation.
             </div>
             <div className="row">
               <span className="label">Anonymity</span>
-              You may contribute without naming your institution.
+              You may contribute without identifying yourself or naming your institution.
             </div>
           </aside>
           <DropboxUpload />

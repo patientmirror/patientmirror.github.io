@@ -1,244 +1,1674 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patient MIRROR</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #f5f2ec;
-      --ink: #1a1a18;
-      --accent: #2e5c6e;
-      --muted: #7a7a72;
-      --rule: #c8c3b8;
-      --link-hover: #1a3d4d;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Patient MIRROR — Medical Instructional Resource Review Of Representation</title>
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+<style>
+:root {
+  /* Defaults — overridden inline by React from Tweaks */
+  --bg: oklch(98% 0.005 90);
+  --bg-soft: oklch(96% 0.008 80);
+  --ink: oklch(20% 0.01 270);
+  --ink-2: oklch(38% 0.01 270);
+  --ink-3: oklch(55% 0.01 270);
+  --rule: oklch(20% 0.01 270 / 0.12);
+  --rule-soft: oklch(20% 0.01 270 / 0.06);
+  --accent: oklch(28% 0.14 265);   /* emory blue */
+  --accent-soft: oklch(28% 0.14 265 / 0.08);
+  --gold: oklch(60% 0.13 80);     /* emory gold */
 
-    /* ── Header ── */
-    header {
-      padding: 3.5rem 4rem 2rem;
-      border-bottom: 1px solid var(--rule);
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      animation: fadeDown 0.8s ease both;
-    }
+  --serif: 'Fraunces', 'Source Serif 4', Georgia, serif;
+  --sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
+  --mono:  'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
 
-    .eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 300;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 
-    h1 {
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      font-weight: 300;
-      letter-spacing: -0.01em;
-      line-height: 1.1;
-      color: var(--ink);
-    }
+/* ─── Layout shell ─────────────────────────────────────── */
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 48px 64px;
+}
+.measure {
+  max-width: 720px;
+}
 
-    h1 span {
-      color: var(--accent);
-      font-weight: 600;
-    }
+/* ─── Top bar ──────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0 0;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 16px;
+  margin-bottom: 36px;
+}
+.wordmark {
+  font-family: var(--serif);
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+.wordmark .wm-patient {
+  font-weight: 400;
+}
+.wordmark .wm-mirror {
+  font-weight: 500;
+  font-variant: small-caps;
+  letter-spacing: 0.14em;
+  margin-left: 0.35em;
+  color: var(--gold);
+}
+.topbar-meta {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  gap: 28px;
+}
+.topbar-meta a { color: inherit; text-decoration: none; }
+.topbar-meta a:hover { color: var(--ink); }
 
-    .subtitle {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      font-weight: 300;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      margin-top: 0.2rem;
-    }
+/* ─── Hero ─────────────────────────────────────────────── */
+.hero {
+  padding: 24px 0 48px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 48px;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+.hero-eyebrow .dot {
+  display: inline-block;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--gold);
+  margin-right: 8px;
+  vertical-align: 2px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 4.2vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-lede {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 620px;
+  text-wrap: pretty;
+}
 
-    /* ── Main ── */
-    main {
-      flex: 1;
-      padding: 4rem 4rem 3rem;
-      max-width: 860px;
-      animation: fadeUp 0.9s ease 0.15s both;
-    }
+/* ─── Section frame ────────────────────────────────────── */
+.section {
+  padding: 44px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.section:last-of-type { border-bottom: 0; }
+.section-head {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 48px;
+  margin-bottom: 28px;
+  align-items: baseline;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  padding-top: 8px;
+}
+.section-num .num {
+  color: var(--gold);
+  margin-right: 8px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+.section-body {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 48px;
+}
+.section-aside {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  padding-top: 4px;
+}
+.section-aside .label {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.section-aside .row + .row { margin-top: 12px; }
 
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.4rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+/* ─── About ────────────────────────────────────────────── */
+.about-prose {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 680px;
+}
+.about-prose p { margin: 0 0 0.9em; text-wrap: pretty; }
+.about-prose p:last-child { margin-bottom: 0; }
+.about-prose .pullquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--ink);
+  border-left: 2px solid var(--gold);
+  padding: 2px 0 2px 20px;
+  margin: 18px 0;
+  font-weight: 300;
+}
 
-    .section-label::after {
-      content: '';
-      flex: 1;
-      max-width: 40px;
-      height: 1px;
-      background: var(--rule);
-    }
+/* ─── FAQ ──────────────────────────────────────────────── */
+.faq-list {
+  max-width: 760px;
+}
+.faq-item {
+  border-top: 1px solid var(--rule);
+}
+.faq-item:last-child { border-bottom: 1px solid var(--rule); }
+.faq-q {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px 1fr 20px;
+  gap: 12px;
+  align-items: baseline;
+  padding: 14px 0;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+  transition: color .15s;
+}
+.faq-q:hover { color: var(--accent); }
+.faq-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  position: relative;
+  top: -2px;
+}
+.faq-item.is-open .faq-num { color: var(--gold); }
+.faq-chev {
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .25s ease, color .15s;
+  align-self: center;
+}
+.faq-item.is-open .faq-chev {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+.faq-a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .3s ease;
+}
+.faq-item.is-open .faq-a-wrap {
+  grid-template-rows: 1fr;
+}
+.faq-a {
+  overflow: hidden;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding-left: 52px;
+  padding-right: 24px;
+}
+.faq-item.is-open .faq-a {
+  padding-bottom: 18px;
+}
+.faq-q-text { text-wrap: pretty; }
 
-    p.about {
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
-      font-weight: 300;
-      line-height: 1.85;
-      color: var(--ink);
-      max-width: 72ch;
-    }
+/* ─── Upload ───────────────────────────────────────────── */
+.upload-block {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 32px;
+  align-items: start;
+}
+.upload-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+.upload-copy {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 16px;
+  text-wrap: pretty;
+}
+/* Dropbox upload card — prominent CTA */
+.dropbox-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 24px;
+  row-gap: 12px;
+  align-items: center;
+  padding: 32px;
+  background: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color .2s, background .2s, transform .2s;
+  position: relative;
+  overflow: hidden;
+}
+.dropbox-card:hover {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+.dropbox-card:hover .dropbox-card-cta {
+  background: var(--accent);
+  color: var(--bg);
+}
+.dropbox-card:hover .dropbox-card-cta svg {
+  transform: translate(2px, -2px);
+}
+.dropbox-card-icon {
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px; height: 72px;
+  background: var(--bg);
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  grid-row: 1 / 3;
+  align-self: start;
+}
+.dropbox-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dropbox-card-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+}
+.dropbox-card-sub {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+.dropbox-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: 2px;
+  margin-top: 10px;
+  width: fit-content;
+  transition: background .2s, color .2s;
+}
+.dropbox-card-cta svg { transition: transform .2s; }
+.dropbox-card-meta {
+  grid-column: 2 / 3;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.dropbox-card-meta .mono {
+  font-family: var(--mono);
+  letter-spacing: 0.02em;
+}
+.upload-footnote-inline {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.upload-footnote-inline .mono {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
 
-    /* ── Links ── */
-    .links {
-      margin-top: 3.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 400px;
-    }
+/* ─── Dashboard ────────────────────────────────────────── */
+.dashboard { display: flex; flex-direction: column; gap: 28px; }
 
-    .link-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.25rem;
-      border: 1px solid var(--rule);
-      text-decoration: none;
-      color: var(--ink);
-      background: transparent;
-      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-      gap: 1rem;
-    }
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.stat-tile {
+  padding: 18px 20px 18px 0;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-tile:first-child { padding-left: 0; }
+.stat-tile:not(:first-child) { padding-left: 20px; }
+.stat-tile:last-child { border-right: 0; }
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.stat-value {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.stat-sublabel {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
 
-    .link-item:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
+.dash-main {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.dashboard.layout-stacked .dash-main {
+  grid-template-columns: 1fr;
+}
+.dashboard.layout-schools-first .dash-main {
+  grid-template-columns: 1fr 1.1fr;
+}
+.dashboard.layout-schools-first .dash-panel-dist { order: 2; }
+.dashboard.layout-schools-first .dash-panel-schools { order: 1; }
 
-    .link-item:hover .link-arrow {
-      color: #fff;
-    }
+.dash-panel { display: flex; flex-direction: column; gap: 14px; }
 
-    .link-text {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.panel-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+.panel-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
-    .link-desc {
-      font-size: 0.85rem;
-      font-weight: 300;
-      color: var(--muted);
-      transition: color 0.2s ease;
-    }
+/* Filters */
+.filter-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 140px;
+}
+.filter-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.filter select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 22px 6px 0;
+  font: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23888' d='M0 0h10L5 6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  border-radius: 0;
+  outline: 0;
+  transition: border-color .15s;
+}
+.filter select:hover, .filter select:focus { border-bottom-color: var(--accent); }
 
-    .link-item:hover .link-desc {
-      color: rgba(255,255,255,0.75);
-    }
+/* Distribution chart */
+.dist-chart { display: flex; flex-direction: column; gap: 18px; }
+.dist-bar {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+.dist-segment {
+  height: 100%;
+  background: oklch(from var(--accent) calc(45% + var(--seg-shade, 15%)) calc(c * 0.85) h);
+  border-right: 1px solid var(--bg);
+  transition: width .35s cubic-bezier(.3,.7,.4,1);
+}
+.dist-segment:last-child { border-right: 0; }
+.dist-legend {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px 24px;
+}
+.dist-legend li {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.legend-swatch {
+  width: 10px; height: 10px;
+  background: oklch(from var(--accent) calc(45% + var(--seg-shade, 15%)) calc(c * 0.85) h);
+  border-radius: 1px;
+}
+.legend-pct {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
 
-    .link-left {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
+/* School breakdown */
+.school-table {
+  display: flex; flex-direction: column;
+}
+.school-row {
+  display: grid;
+  grid-template-columns: 1.6fr 50px 60px 1.2fr;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 13px;
+}
+.school-row-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.school-name { color: var(--ink); }
+.school-row .num {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.bar-col { padding-left: 8px; }
+.bar {
+  display: block;
+  height: 6px;
+  background: var(--rule-soft);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.7;
+}
 
-    .link-arrow {
-      font-size: 1rem;
-      color: var(--muted);
-      flex-shrink: 0;
-      transition: color 0.2s ease;
-    }
+.dash-footnote {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule-soft);
+  max-width: 720px;
+}
 
-    /* ── Footer ── */
-    footer {
-      padding: 1.5rem 4rem;
-      border-top: 1px solid var(--rule);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      display: flex;
-      justify-content: space-between;
-      animation: fadeUp 0.9s ease 0.3s both;
-    }
+/* ─── Footer ───────────────────────────────────────────── */
+.footer {
+  padding: 28px 0 0;
+  border-top: 1px solid var(--rule);
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+}
+.footer-mark {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink-3);
+  font-style: italic;
+}
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  text-align: right;
+  line-height: 1.7;
+}
 
-    /* ── Animations ── */
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      header, main, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
-      footer { flex-direction: column; gap: 0.4rem; }
-    }
-  </style>
+/* ─── Responsive ───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .page { padding: 0 28px 80px; }
+  .topbar { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .topbar-meta { gap: 18px; flex-wrap: wrap; }
+  .hero { padding: 24px 0 64px; margin-bottom: 64px; }
+  .section { padding: 56px 0; }
+  .section-head, .section-body { grid-template-columns: 1fr; gap: 24px; }
+  .section-aside { order: 2; }
+  .upload-block { grid-template-columns: 1fr; gap: 32px; }
+  .dash-stats { grid-template-columns: repeat(2, 1fr); }
+  .stat-tile { border-right: 0; padding: 20px 0 !important; border-bottom: 1px solid var(--rule); }
+  .stat-tile:nth-child(odd) { border-right: 1px solid var(--rule); padding-right: 24px !important; }
+  .stat-tile:nth-child(even) { padding-left: 24px !important; }
+  .stat-tile:nth-last-child(-n+2) { border-bottom: 0; }
+  .dash-main { grid-template-columns: 1fr !important; gap: 48px; }
+  .stat-value { font-size: 40px; }
+  .school-row { grid-template-columns: 1.4fr 40px 50px 1fr; }
+}
+</style>
 </head>
 <body>
+<div id="root"></div>
 
-  <header>
-    <span class="eyebrow">Research Project</span>
-    <h1>Patient <span>MIRROR</span></h1>
-    <p class="subtitle">Medical Instructional Resource Review Of Representation</p>
-  </header>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-  <main>
-    <div class="section-label">About</div>
-    <p class="about">
-      Patient MIRROR is a research study examining demographic representation within clinical vignettes
-      used in medical education and training. Clinical vignettes — the brief patient scenarios central
-      to case-based learning — shape how future clinicians conceptualize disease presentation, risk,
-      and treatment across different populations. This project systematically analyzes the demographic
-      composition of such vignettes to identify patterns of representation and omission.
-    </p>
+<script type="text/babel">
 
-    <nav class="links" aria-label="Resources">
-      <a href="faqs.html" class="link-item">
-        <div class="link-left">
-          <span class="link-text">FAQs</span>
-          <span class="link-desc">Frequently Asked Questions</span>
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel"
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
         </div>
-        <span class="link-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://www.dropbox.com/request/Im7YPjb2RJwS4E9Wo5FD" class="link-item">
-        <div class="link-left">
-          <span class="link-text">Contribute Curricular Materials</span>
-          <span class="link-desc">Anonymous access via Dropbox</span>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" className="twk-swatch" value={value}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
+</script>
+<script type="text/babel">
+// faq.jsx — FAQ accordion
+
+const FAQS = [
+  {
+    q: 'What is the Patient MIRROR study?',
+    a: 'Patient MIRROR (Medical Instructional Resource Review Of Representation) is a research project that systematically examines the demographic characteristics of patients depicted in clinical vignettes used in medical education. The study aims to characterize patterns of representation across dimensions such as age, sex, race, and ethnicity.',
+  },
+  {
+    q: 'Who is conducting this research?',
+    a: 'The project is being led by Dr. Marta Rowh, Assistant Professor of Emergency Medicine, Emory University School of Medicine.',
+  },
+  {
+    q: 'What types of clinical vignettes are included in the analysis?',
+    a: 'USMLE-style questions, textbook cases, standardized patient scenarios, and other case-based teaching materials commonly used in undergraduate and graduate medical education.',
+  },
+  {
+    q: 'What demographic dimensions does the study examine?',
+    a: 'Age, sex assigned at birth, race, ethnicity, socioeconomic status, and other patient-level descriptors when present in the source material.',
+  },
+  {
+    q: 'How can I contribute my dataset or curricular materials?',
+    a: 'Study materials and annotated datasets can be uploaded via Dropbox using the file request on this page. You may contribute your curricular material anonymously, if you prefer.',
+  },
+  {
+    q: 'Will my curricular materials be safe?',
+    a: 'The contributed curricular materials will only be used for research, after de-identification. Your curricular material will not be shared with non-project personnel.',
+  },
+  {
+    q: 'How do I contact the research team?',
+    a: 'You can reach out to our team at patientmirror (at) gmail (dot) com.',
+  },
+];
+
+function FAQItem({ q, a, open, onToggle, idx }) {
+  const num = String(idx + 1).padStart(2, '0');
+  return (
+    <div className={`faq-item ${open ? 'is-open' : ''}`}>
+      <button className="faq-q" onClick={onToggle} aria-expanded={open}>
+        <span className="faq-num">{num}</span>
+        <span className="faq-q-text">{q}</span>
+        <span className="faq-chev" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </span>
+      </button>
+      <div className="faq-a-wrap" aria-hidden={!open}>
+        <div className="faq-a">{a}</div>
+      </div>
+    </div>
+  );
+}
+
+function FAQ() {
+  const [openIdx, setOpenIdx] = React.useState(-1);
+  return (
+    <div className="faq-list">
+      {FAQS.map((item, i) => (
+        <FAQItem
+          key={i}
+          idx={i}
+          q={item.q}
+          a={item.a}
+          open={openIdx === i}
+          onToggle={() => setOpenIdx(openIdx === i ? -1 : i)}
+        />
+      ))}
+    </div>
+  );
+}
+
+Object.assign(window, { FAQ });
+
+</script>
+<script type="text/babel">
+// upload.jsx — Prominent Dropbox upload button (replaces embed)
+
+const DROPBOX_URL = 'https://www.dropbox.com/request/Im7YPjb2RJwS4E9Wo5FD';
+
+function DropboxUpload() {
+  return (
+    <div className="upload-block">
+      <div className="upload-meta">
+        <div className="upload-eyebrow">Contribute materials</div>
+        <p className="upload-copy">
+          Drop curricular material (slides, PDFs, etc) containing clinical vignettes, USMLE-style questions, or case studiesdirectly into our Dropbox file request. You may contribute anonymously. Files are
+          de-identified and used only for the Patient MIRROR analysis.
+        </p>
+        <div className="upload-footnote-inline">
+          Questions about contributing? Email <span className="mono">patientmirror (at) gmail (dot) com</span>.
         </div>
-        <span class="link-arrow" aria-hidden="true">→</span>
+      </div>
+
+      <a className="dropbox-card" href={DROPBOX_URL} target="_blank" rel="noopener noreferrer">
+        <div className="dropbox-card-icon" aria-hidden="true">
+          {/* Dropbox-style folded box mark */}
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+            <path d="M16 8 L32 18 L16 28 L0 18 Z"  fill="currentColor" opacity="0.92"/>
+            <path d="M48 8 L64 18 L48 28 L32 18 Z" fill="currentColor" opacity="0.78"/>
+            <path d="M0 38 L16 28 L32 38 L16 48 Z" fill="currentColor" opacity="0.78"/>
+            <path d="M32 38 L48 28 L64 38 L48 48 Z" fill="currentColor" opacity="0.92"/>
+            <path d="M16 50 L32 40 L48 50 L32 60 Z" fill="currentColor" opacity="0.65"/>
+          </svg>
+        </div>
+        <div className="dropbox-card-body">
+          <div className="dropbox-card-title">Upload to Dropbox</div>
+          <div className="dropbox-card-sub">Secure file request — no Dropbox account required</div>
+          <div className="dropbox-card-cta">
+            <span>Open file request</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div className="dropbox-card-meta">
+          <span className="mono">dropbox.com / request / Im7YPjb2RJwS4E9Wo5FD</span>
+        </div>
       </a>
-    </nav>
-  </main>
+    </div>
+  );
+}
 
-  <footer>
-    <span>Patient MIRROR</span>
-    <span>Medical Instructional Resource Review Of Representation</span>
-  </footer>
+Object.assign(window, { DropboxUpload });
 
+</script>
+<script type="text/babel">
+// dashboard.jsx — Mini dashboard for Patient MIRROR study
+// Shows: schools, files, cases, demographics, distribution chart with filters
+
+const SCHOOLS = [
+  { id: 'emory',     name: 'School A',                 files: 47, cases: 312 },
+  { id: 'jhu',       name: 'School B',                    files: 41, cases: 268 },
+  { id: 'ucsf',      name: 'School C',                             files: 38, cases: 241 },
+];
+
+const SPECIALTIES = [
+  'Emergency Medicine', 'Internal Medicine', 'Pediatrics', 'Surgery',
+  'OB/GYN', 'Psychiatry', 'Family Medicine', 'Cardiology', 'Neurology',
+];
+
+// Demographic distribution by category. Numbers are illustrative research-stage
+// composites; share-of-cases per dimension.
+const DEMOGRAPHICS = {
+  'Sex assigned at birth': [
+    { label: 'Male',           pct: 58 },
+    { label: 'Female',         pct: 41 },
+    { label: 'Not specified',  pct:  1 },
+  ],
+  'Age group': [
+    { label: 'Pediatric (0–17)',     pct: 14 },
+    { label: 'Young adult (18–39)',  pct: 31 },
+    { label: 'Middle-age (40–64)',   pct: 38 },
+    { label: 'Older adult (65+)',    pct: 17 },
+  ],
+  'Race': [
+    { label: 'White',                          pct: 64 },
+    { label: 'Black or African American',      pct: 11 },
+    { label: 'Asian',                          pct:  8 },
+    { label: 'American Indian / Alaska Native',pct:  1 },
+    { label: 'Other / multiple',               pct:  4 },
+    { label: 'Not specified',                  pct: 12 },
+  ],
+  'Ethnicity': [
+    { label: 'Not Hispanic',  pct: 71 },
+    { label: 'Hispanic',      pct:  9 },
+    { label: 'Not specified',           pct: 20 },
+  ],
+  'Socioeconomic status': [
+    { label: 'Mentioned',     pct: 22 },
+    { label: 'Not mentioned', pct: 78 },
+  ],
+};
+
+const DEMOGRAPHIC_DIMENSIONS = Object.keys(DEMOGRAPHICS);
+
+function StatTile({ label, value, sublabel }) {
+  return (
+    <div className="stat-tile">
+      <div className="stat-label">{label}</div>
+      <div className="stat-value">{value}</div>
+      {sublabel && <div className="stat-sublabel">{sublabel}</div>}
+    </div>
+  );
+}
+
+function SchoolBreakdown({ layout }) {
+  const total = SCHOOLS.reduce((s, x) => s + x.cases, 0);
+  const max = Math.max(...SCHOOLS.map((s) => s.cases));
+  return (
+    <div className={`school-breakdown layout-${layout}`}>
+      <div className="panel-head">
+        <div className="panel-title">By contributing school</div>
+        <div className="panel-meta">{SCHOOLS.length} institutions · {total.toLocaleString()} cases</div>
+      </div>
+      <div className="school-table">
+        <div className="school-row school-row-head">
+          <span>Institution</span>
+          <span className="num">Files</span>
+          <span className="num">Cases</span>
+          <span className="bar-col">Share</span>
+        </div>
+        {SCHOOLS.map((s) => (
+          <div className="school-row" key={s.id}>
+            <span className="school-name">{s.name}</span>
+            <span className="num">{s.files}</span>
+            <span className="num">{s.cases}</span>
+            <span className="bar-col">
+              <span className="bar"><span className="bar-fill" style={{ width: `${(s.cases / max) * 100}%` }} /></span>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DistributionChart({ dimension, school, specialty }) {
+  const data = DEMOGRAPHICS[dimension];
+  // Slight deterministic variation by filter selection so the chart visibly
+  // responds without faking a real backend.
+  const seed = (school + '|' + specialty + '|' + dimension)
+    .split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const adjusted = data.map((d, i) => {
+    if (school === 'all' && specialty === 'all') return d;
+    const wobble = ((seed * (i + 3)) % 11) - 5;
+    return { ...d, pct: Math.max(0, Math.min(100, d.pct + wobble)) };
+  });
+  // Renormalize so it sums to ~100 after wobble.
+  const sum = adjusted.reduce((s, x) => s + x.pct, 0) || 1;
+  const final = adjusted.map((d) => ({ ...d, pct: Math.round((d.pct / sum) * 100) }));
+
+  return (
+    <div className="dist-chart">
+      <div className="dist-bar">
+        {final.map((d, i) => (
+          <span
+            key={d.label}
+            className="dist-segment"
+            style={{ width: `${d.pct}%`, '--seg-shade': `${15 + i * 12}%` }}
+            title={`${d.label}: ${d.pct}%`}
+          />
+        ))}
+      </div>
+      <ul className="dist-legend">
+        {final.map((d, i) => (
+          <li key={d.label}>
+            <span className="legend-swatch" style={{ '--seg-shade': `${15 + i * 12}%` }} />
+            <span className="legend-label">{d.label}</span>
+            <span className="legend-pct">{d.pct}%</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Dashboard({ layout }) {
+  const [school, setSchool] = React.useState('all');
+  const [specialty, setSpecialty] = React.useState('all');
+  const [dimension, setDimension] = React.useState(DEMOGRAPHIC_DIMENSIONS[2]); // Race default
+
+  const totalSchools = SCHOOLS.length;
+  const totalFiles   = SCHOOLS.reduce((s, x) => s + x.files, 0);
+  const totalCases   = SCHOOLS.reduce((s, x) => s + x.cases, 0);
+  const dimsCovered  = DEMOGRAPHIC_DIMENSIONS.length;
+
+  return (
+    <div className={`dashboard layout-${layout}`}>
+      <div className="dash-stats">
+        <StatTile label="Participating schools"  value={totalSchools} sublabel="contributing" />
+        <StatTile label="Files in database"       value={totalFiles.toLocaleString()} sublabel="curricular materials" />
+        <StatTile label="Cases analyzed"          value={totalCases.toLocaleString()} sublabel="clinical vignettes" />
+        <StatTile label="Demographic dimensions"  value={dimsCovered} sublabel="annotated per case" />
+      </div>
+
+      <div className="dash-main">
+        <div className="dash-panel dash-panel-dist">
+          <div className="panel-head">
+            <div>
+              <div className="panel-title">Demographic distribution</div>
+              <div className="panel-meta">Share of cases · filterable by school & specialty</div>
+            </div>
+          </div>
+
+          <div className="filter-row">
+            <label className="filter">
+              <span className="filter-label">Dimension</span>
+              <select value={dimension} onChange={(e) => setDimension(e.target.value)}>
+                {DEMOGRAPHIC_DIMENSIONS.map((d) => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </label>
+            <label className="filter">
+              <span className="filter-label">School</span>
+              <select value={school} onChange={(e) => setSchool(e.target.value)}>
+                <option value="all">All schools</option>
+                {SCHOOLS.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </label>
+            <label className="filter">
+              <span className="filter-label">Specialty</span>
+              <select value={specialty} onChange={(e) => setSpecialty(e.target.value)}>
+                <option value="all">All specialties</option>
+                {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </label>
+          </div>
+
+          <DistributionChart dimension={dimension} school={school} specialty={specialty} />
+        </div>
+
+        <div className="dash-panel dash-panel-schools">
+          <SchoolBreakdown layout={layout} />
+        </div>
+      </div>
+
+      <div className="dash-footnote">
+        Figures shown are illustrative of the current research-stage corpus and update as new institutions contribute.
+        Last refreshed 04/24/2026.
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { Dashboard });
+
+</script>
+
+<script type="text/babel">
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "emory",
+  "typeface": "fraunces-inter",
+  "dashboardLayout": "schools-first",
+  "accentColor": "#012169",
+  "showWordmarkAccent": true
+}/*EDITMODE-END*/;
+
+// Emory University brand: Emory Blue #012169 (primary) + Emory Gold #B58500 (secondary).
+// Approximated in oklch so chroma renders consistently with the rest of the system.
+const PALETTES = {
+  emory: { bg: 'oklch(98% 0.005 250)', bgSoft: 'oklch(96% 0.010 250)', accent: 'oklch(28% 0.14 265)', ink: 'oklch(18% 0.02 265)' }, // Emory Blue
+  'emory-gold': { bg: 'oklch(98% 0.006 90)', bgSoft: 'oklch(96% 0.014 85)', accent: 'oklch(58% 0.13 78)', ink: 'oklch(20% 0.02 265)' }, // Emory Gold accent over warm bone
+  oxblood: { bg: 'oklch(98% 0.005 90)', bgSoft: 'oklch(96% 0.008 80)', accent: 'oklch(42% 0.13 25)', ink: 'oklch(20% 0.01 270)' },
+  clinical: { bg: 'oklch(98% 0.006 230)', bgSoft: 'oklch(96% 0.012 230)', accent: 'oklch(45% 0.13 240)', ink: 'oklch(22% 0.02 240)' },
+  forest: { bg: 'oklch(98% 0.008 130)', bgSoft: 'oklch(96% 0.014 130)', accent: 'oklch(40% 0.10 150)', ink: 'oklch(20% 0.015 150)' },
+  graphite: { bg: 'oklch(98% 0.003 80)', bgSoft: 'oklch(95% 0.005 80)', accent: 'oklch(28% 0.02 270)', ink: 'oklch(18% 0.005 270)' },
+  custom: null
+};
+
+const TYPEFACES = {
+  'fraunces-inter': { serif: "'Fraunces', Georgia, serif", sans: "'Inter', system-ui, sans-serif", label: 'Fraunces × Inter' },
+  'newsreader-inter': { serif: "'Newsreader', Georgia, serif", sans: "'Inter', system-ui, sans-serif", label: 'Newsreader × Inter' },
+  'source-serif': { serif: "'Source Serif 4', Georgia, serif", sans: "'Inter', system-ui, sans-serif", label: 'Source Serif × Inter' },
+  'all-serif': { serif: "'Fraunces', Georgia, serif", sans: "'Source Serif 4', Georgia, serif", label: 'All-serif (editorial)' }
+};
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  const palette = PALETTES[t.palette] || PALETTES.oxblood;
+  const accent = t.palette === 'custom' ? t.accentColor : palette.accent;
+  const typeface = TYPEFACES[t.typeface] || TYPEFACES['fraunces-inter'];
+
+  const themeStyle = {
+    '--bg': palette ? palette.bg : 'oklch(98% 0.005 90)',
+    '--bg-soft': palette ? palette.bgSoft : 'oklch(96% 0.008 80)',
+    '--ink': palette ? palette.ink : 'oklch(20% 0.01 270)',
+    '--accent': accent,
+    '--serif': typeface.serif,
+    '--sans': typeface.sans
+  };
+
+  // Apply to :root so global CSS picks it up
+  React.useEffect(() => {
+    const root = document.documentElement;
+    Object.entries(themeStyle).forEach(([k, v]) => root.style.setProperty(k, v));
+  });
+
+  return (
+    <div className="page">
+      {/* ─── Top bar ───────────────────────── */}
+      <header className="topbar">
+        <div className="wordmark">
+          <span className="wm-patient" style={{ fontFamily: "Inter" }}>Patient</span>
+          <span className="wm-mirror" style={{ color: t.showWordmarkAccent ? 'var(--accent)' : 'var(--ink)' }}>MIRROR</span>
+        </div>
+        <nav className="topbar-meta">
+          <a href="#about">About</a>
+          <a href="#faq">FAQs</a>
+          <a href="#contribute">Contribute</a>
+          <a href="#dashboard">Dashboard</a>
+        </nav>
+      </header>
+
+      {/* ─── Hero ──────────────────────────── */}
+      <section className="hero" data-screen-label="Hero">
+        <div className="hero-eyebrow">
+          <span className="dot"></span>A research study · Emory University School of Medicine
+        </div>
+        <h1>Who appears in the cases <em>future clinicians</em> learn from?</h1>
+        <p className="hero-lede">
+          Patient MIRROR systematically analyzes the demographic composition of clinical
+          vignettes used in medical education to identify patterns of representation —
+          and omission — across the populations they depict.
+        </p>
+      </section>
+
+      {/* ─── About ─────────────────────────── */}
+      <section className="section" id="about" data-screen-label="About">
+        <div className="section-head">
+          <div className="section-num"><span className="num">01</span>About the study</div>
+          <h2 className="section-title">Clinical vignettes shape how future clinicians see patients.</h2>
+        </div>
+        <div className="section-body">
+          <aside className="section-aside">
+            <div className="row">
+              <span className="label">Principal Investigator</span>
+              Dr. Marta Rowh<br />
+              Asst. Professor, Emergency Medicine<br />
+              Emory University School of Medicine
+            </div>
+            <div className="row">
+              <span className="label">Methodology</span>
+              Systematic content review<br />
+              Multi-rater annotation<br />
+              Dimension-level coding
+            </div>
+            <div className="row">
+              <span className="label">IRB Status</span>
+              Exempt determination<br />
+              Emory IRB
+            </div>
+          </aside>
+
+          <div className="about-prose">
+            <p>
+              Patient MIRROR — <em>Medical Instructional Resource Review Of Representation</em> —
+              examines sociodemographic representation within the clinical vignettes used in medical
+              education and training.
+            </p>
+            <p className="pullquote">
+              The clinical vignettes central to case-based learning shape how future clinicians
+              conceptualize disease presentation, risk, and treatment across different populations.
+            </p>
+            <p>
+              We systematically analyze vignettes from curricular material — automatically coding for age, sex assigned at birth, race,
+              ethnicity, and socioeconomic status — to produce a shared evidence base medical
+              educators can use to revise and diversify the cases their students learn from.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ ───────────────────────────── */}
+      <section className="section" id="faq" data-screen-label="FAQ">
+        <div className="section-head">
+          <div className="section-num"><span className="num">02</span>FAQs</div>
+          <h2 className="section-title">Frequently asked questions.</h2>
+        </div>
+        <div className="section-body">
+          <aside className="section-aside">
+            <div className="row">
+              <span className="label">Don't see your question?</span>
+              Email the team and we'll get back to you.
+            </div>
+            <div className="row">
+              <span className="label">Contact</span>
+              patientmirror<br />
+              (at) gmail (dot) com
+            </div>
+          </aside>
+          <FAQ />
+        </div>
+      </section>
+
+      {/* ─── Contribute / Upload ──────────── */}
+      <section className="section" id="contribute" data-screen-label="Contribute">
+        <div className="section-head">
+          <div className="section-num"><span className="num">03</span>Contribute materials</div>
+          <h2 className="section-title">Upload curricular cases through our secure Dropbox file request.</h2>
+        </div>
+        <div className="section-body">
+          <aside className="section-aside">
+            <div className="row">
+              <span className="label">Accepted formats</span>
+              PDF · PPTX · DOCX · TXT
+            </div>
+            <div className="row">
+              <span className="label">De-identification</span>
+              All materials are processed and de-identified before annotation. Source attribution is optional.
+            </div>
+            <div className="row">
+              <span className="label">Anonymity</span>
+              You may contribute without naming your institution.
+            </div>
+          </aside>
+          <DropboxUpload />
+        </div>
+      </section>
+
+      {/* ─── Dashboard ─────────────────────── */}
+      <section className="section" id="dashboard" data-screen-label="Dashboard">
+        <div className="section-head">
+          <div className="section-num"><span className="num">04</span>Live corpus</div>
+          <h2 className="section-title">The Patient MIRROR database, at a glance.</h2>
+        </div>
+        <Dashboard layout={t.dashboardLayout} />
+      </section>
+
+      {/* ─── Footer ────────────────────────── */}
+      <footer className="footer">
+        <div className="footer-mark">
+          A research project hosted at Emory University School of Medicine.
+        </div>
+        <div className="footer-meta">
+          © 2026 Patient MIRROR<br />
+          patientmirror (at) gmail (dot) com
+        </div>
+      </footer>
+
+      {/* ─── Tweaks ────────────────────────── */}
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Palette" />
+        <TweakSelect label="Theme" value={t.palette}
+        options={[
+        { value: 'emory', label: 'Emory Blue (default)' },
+        { value: 'emory-gold', label: 'Emory Gold' },
+        { value: 'oxblood', label: 'Oxblood' },
+        { value: 'clinical', label: 'Clinical blue' },
+        { value: 'forest', label: 'Forest green' },
+        { value: 'graphite', label: 'Graphite' },
+        { value: 'custom', label: 'Custom accent…' }]
+        }
+        onChange={(v) => setTweak('palette', v)} />
+        {t.palette === 'custom' &&
+        <TweakColor label="Accent color" value={t.accentColor} onChange={(v) => setTweak('accentColor', v)} />
+        }
+        <TweakToggle label="Accent on MIRROR wordmark" value={t.showWordmarkAccent}
+        onChange={(v) => setTweak('showWordmarkAccent', v)} />
+
+        <TweakSection label="Typography" />
+        <TweakSelect label="Type pairing" value={t.typeface}
+        options={Object.entries(TYPEFACES).map(([v, o]) => ({ value: v, label: o.label }))}
+        onChange={(v) => setTweak('typeface', v)} />
+
+        <TweakSection label="Dashboard" />
+        <TweakRadio label="Layout" value={t.dashboardLayout}
+        options={[
+        { value: 'side-by-side', label: 'Split' },
+        { value: 'schools-first', label: 'Schools left' },
+        { value: 'stacked', label: 'Stacked' }]
+        }
+        onChange={(v) => setTweak('dashboardLayout', v)} />
+      </TweaksPanel>
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>

@@ -192,29 +192,6 @@ body {
 }
 .section-aside .row + .row { margin-top: 12px; }
 
-/* ─── About ────────────────────────────────────────────── */
-.about-prose {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: 16.5px;
-  line-height: 1.55;
-  color: var(--ink);
-  max-width: 680px;
-}
-.about-prose p { margin: 0 0 0.9em; text-wrap: pretty; }
-.about-prose p:last-child { margin-bottom: 0; }
-.about-prose .pullquote {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 19px;
-  line-height: 1.35;
-  color: var(--ink);
-  border-left: 2px solid var(--gold);
-  padding: 2px 0 2px 20px;
-  margin: 18px 0;
-  font-weight: 300;
-}
-
 /* ─── FAQ ──────────────────────────────────────────────── */
 .faq-list {
   max-width: 760px;
@@ -1516,53 +1493,7 @@ function App() {
           and omission — across the populations they depict.
         </p>
       </section>
-
-      {/* ─── About ─────────────────────────── */}
-      <section className="section" id="about" data-screen-label="About">
-        <div className="section-head">
-          <div className="section-num"><span className="num">01</span>About the study</div>
-          <h2 className="section-title">Clinical vignettes shape how future clinicians see patients.</h2>
-        </div>
-        <div className="section-body">
-          <aside className="section-aside">
-            <div className="row">
-              <span className="label">Principal Investigator</span>
-              Dr. Marta Rowh<br />
-              Asst. Professor, Emergency Medicine<br />
-              Emory University School of Medicine
-            </div>
-            <div className="row">
-              <span className="label">Methodology</span>
-              Systematic content review<br />
-              Multi-rater annotation<br />
-              Dimension-level coding
-            </div>
-            <div className="row">
-              <span className="label">IRB Status</span>
-              Exempt determination<br />
-              Emory IRB
-            </div>
-          </aside>
-
-          <div className="about-prose">
-            <p>
-              Patient MIRROR — <em>Medical Instructional Resource Review Of Representation</em> —
-              examines sociodemographic representation within the clinical vignettes used in medical
-              education and training.
-            </p>
-            <p className="pullquote">
-              The clinical vignettes central to case-based learning shape how future clinicians
-              conceptualize disease presentation, risk, and treatment across different populations.
-            </p>
-            <p>
-              We systematically analyze vignettes from curricular material — automatically coding for age, sex assigned at birth, race,
-              ethnicity, and socioeconomic status — to produce a shared evidence base medical
-              educators can use to revise and diversify the cases their students learn from.
-            </p>
-          </div>
-        </div>
-      </section>
-
+      
       {/* ─── FAQ ───────────────────────────── */}
       <section className="section" id="faq" data-screen-label="FAQ">
         <div className="section-head">
